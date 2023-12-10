@@ -1,2 +1,7 @@
 kaggle
 pandas
+torch
+transformers
+accelerate
+tqdm
+wandb
