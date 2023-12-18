@@ -43,8 +43,9 @@ class HMDatasetImages(Dataset):
 
 
 class HMDataset(Dataset):
-    def __init__(self, data_dir, split, tokenizer):
+    def __init__(self, data_dir, split, tokenizer, use_images=False):
         self.tokenizer = tokenizer
+        self.use_images = use_images
         self._load(data_dir, split)
 
     def __len__(self):
@@ -59,6 +60,9 @@ class HMDataset(Dataset):
         for item in items[:-1]:
             inp += " "
             inp += self._make_inp(item, self.articles[f"{item[0]}"])
+            if self.use_images:
+                inp += " "
+                inp += str(self.encoded_images[f"{item[0]}"])
 
         label = self._make_inp(items[-1], self.articles[f"{items[-1][0]}"])
 
@@ -95,3 +99,7 @@ class HMDataset(Dataset):
 
         with open(os.path.join(data_dir, f"{split}.json"), "r") as f:
             self.data = json.load(f)
+        
+        if self.use_images:
+            with open(os.path.join(data_dir, "encoded_images.json"), "r") as f:
+                self.encoded_images = json.load(f)

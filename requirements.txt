@@ -15,3 +15,4 @@ einops
 pillow
 requests
 lpips
+bert_score

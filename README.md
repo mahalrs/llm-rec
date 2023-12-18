@@ -83,6 +83,8 @@ Start fine-tuning:
 python trainer_vqgan.py
 ```
 
+To evaluate VQGAN model, run the notebook `notebooks/evaluate_vqgan.ipynb`.
+
 Now we encode product images using VQGAN. This will take about an hour.
 
 ```sh
@@ -98,3 +100,5 @@ cd src
 
 python trainer_bart.py --data_dir ../data --output_dir ../logs
 ```
+
+To evaluate BART model, run the notebook `notebooks/evaluate_bart.ipynb`.

@@ -41,6 +41,12 @@ def parse_args():
         help="Directory to save logs and checkpoints",
     )
     parser.add_argument(
+        "--use_images",
+        type=bool,
+        default=False,
+        help="Whether to use images (multimodal) or not.",
+    )
+    parser.add_argument(
         "--seed",
         type=int,
         default=123,
@@ -66,15 +72,22 @@ def main():
     model = AutoModelForSeq2SeqLM.from_pretrained("facebook/bart-base")
     tokenizer = AutoTokenizer.from_pretrained("facebook/bart-base")
 
-    train_dataset = HMDataset(args.data_dir, "train", tokenizer)
-    val_dataset = HMDataset(args.data_dir, "val", tokenizer)
+    train_dataset = HMDataset(
+        args.data_dir, "train", tokenizer, use_images=args.use_images
+    )
+    val_dataset = HMDataset(
+        args.data_dir, "val", tokenizer, use_images=args.use_images
+    )
 
     training_args = Seq2SeqTrainingArguments(
         output_dir=args.output_dir,
-        evaluation_strategy="epoch",
-        save_strategy="epoch",
-        logging_strategy="epoch",
-        num_train_epochs=2,
+        evaluation_strategy="steps",
+        logging_strategy="steps",
+        save_strategy="steps",
+        eval_steps=50,
+        logging_steps=50,
+        save_steps=50,
+        num_train_epochs=1,
         learning_rate=5e-5,
         weight_decay=0.01,
         per_device_train_batch_size=4,
