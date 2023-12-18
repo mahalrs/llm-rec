@@ -46,3 +46,55 @@ cd src
 # --data_root: directory containing articles.csv, customers.csv, images, etc.
 python process_data.py --data_root ../data
 ```
+
+## Prepare Data for Training
+
+Now run the following commands to prepare the processed data for training.
+Preprocessing will take about 30 minutes.
+
+```sh
+cd src
+
+python prepare_data_for_training.py --data_root ../data
+```
+
+## Fine-tune VQGAN
+
+Download VQGAN checkpoint pre-trained on ImageNet. See https://heibox.uni-heidelberg.de/d/a7530b09fed84f80a887/ for more details.
+
+Download LPIPS pre-trained model. See https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b for more details.
+
+Preprocess the downloaded pre-trained model:
+
+```sh
+python process_pretrained_vqgan.py
+python -m lightning.pytorch.utilities.upgrade_checkpoint ./pretrained/vqgan.ckpt
+```
+
+Prepare data for training:
+
+```sh
+python prepare_vqgan_data.py
+```
+
+Start fine-tuning:
+
+```sh
+python trainer_vqgan.py
+```
+
+Now we encode product images using VQGAN. This will take about an hour.
+
+```sh
+python encode_data.py
+```
+
+## Fine-tune BART
+
+To start training:
+
+```sh
+cd src
+
+python trainer_bart.py --data_dir ../data --output_dir ../logs
+```
