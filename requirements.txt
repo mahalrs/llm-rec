@@ -1,7 +1,17 @@
 kaggle
+numpy
 pandas
+matplotlib
 torch
+torchvision
+torchmetrics
+lightning==2.0.2
 transformers
 accelerate
 tqdm
 wandb
+tensorboard
+einops
+pillow
+requests
+lpips

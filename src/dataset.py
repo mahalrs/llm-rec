@@ -15,7 +15,31 @@
 import json
 import os
 
+from PIL import Image
 from torch.utils.data import Dataset
+
+
+class HMDatasetImages(Dataset):
+    def __init__(self, data_dir, split, transform):
+        self.image_paths = self.get_image_paths(data_dir, split)
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        sample = self.image_paths[idx]
+
+        try:
+            img = Image.open(sample).convert("RGB")
+            return self.transform(img)
+        except Exception as exc:
+            print(exc)
+            return None
+
+    def get_image_paths(self, data_dir, split):
+        with open(os.path.join(data_dir, f"images_{split}.json"), "r") as f:
+            return json.load(f)
 
 
 class HMDataset(Dataset):
